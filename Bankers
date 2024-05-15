@@ -1,0 +1,91 @@
+#include <stdio.h>
+int main()
+{
+    int p, r, count = 0, i, j, allc[50][50], max[50][50], need[50][50], safe[50], available[50], done[50], terminate = 0;
+    printf("Enter the number of process: ");
+    scanf("%d", &p);
+    printf("\nEnter the number of resouces: ");
+    scanf("%d", &r);
+    printf("\nEnter Allocation of resource of all processes (%dx%d matrix):\n", p, r);
+    for (i = 0; i < p; i++)
+    {
+        for (j = 0; j < r; j++)
+        {
+            scanf("%d", &allc[i][j]);
+        }
+    }
+    printf("\nEnter Maximum Need (%dx%d matrix):\n", p, r);
+    for (i = 0; i < p; i++)
+    {
+        for (j = 0; j < r; j++)
+        {
+            scanf("%d", &max[i][j]);
+        }
+    }
+    printf("\nEnter current Available:\n");
+    for (i = 0; i <r; i++)
+        scanf("%d", &available[i]);
+    printf("\nRemaining Need Matrix is:\n");
+    for (i = 0; i < p; i++)
+    {
+        for (j = 0; j < r; j++)
+        {
+            need[i][j] = max[i][j] - allc[i][j];
+            printf("%d  ", need[i][j]);
+        }
+        printf("\n");
+    }
+    for (i = 0; i < p; i++)
+    {
+        done[i] = 0;//no process has been completed yet.
+    }
+    while (count < p) //count Keeps track of the number of processes completed.
+    {
+        for (i = 0; i < p; i++)
+        {
+            if (done[i] == 0)
+            {
+                for (j = 0; j < r; j++)
+                {
+                    if (need[i][j] >available[j])
+                        break;
+                }
+                if (j == r)
+                {
+                    safe[count] = i;
+                    done[i] = 1;
+                    for (j = 0; j < r; j++)
+                    {
+                        available[j] += allc[i][j];
+                    }
+                    count++;
+                    terminate = 0;
+                }
+                else
+                {
+                    terminate++;
+                }
+            }
+        }
+        if (terminate == (p - 1))
+        {
+            printf("\nSafe sequence does not exist.");
+            break;
+        }
+    }
+    if (terminate != (p - 1))
+    {
+        printf("\nAvailable resources after completion:\n");
+        for (i = 0; i < r; i++)
+        {
+            printf("%d  ", available[i]);
+        }
+        printf("\nSafe sequence is:\n");
+        for (i = 0; i < p; i++)
+        {
+            printf("p%d ", safe[i]);
+
+        }
+    }
+    return 0;
+}
